@@ -1,0 +1,3 @@
+SG_ID = sg-06e495cb0413a5860
+
+PUBLIC_IP = 32.236.40.207  // This changes time to time when ec2 is restarted
