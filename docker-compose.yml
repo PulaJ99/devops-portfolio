@@ -1,0 +1,17 @@
+services:
+  
+  flask-app:
+    image: pulunuwanj/devops-portfolio-project_1:v1
+    container_name: flask-app
+    ports: 
+      - "5000:5000"
+    environment:
+      - FLASK_DEBUG=0
+    networks: 
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+    name: app-network
