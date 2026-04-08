@@ -1,5 +1,5 @@
 # Base image: official python image (slim keeps the image small)
-From python:3.11-slim
+FROM python:3.11-slim
 
 # Setting the working directory
 WORKDIR /app
@@ -17,6 +17,6 @@ COPY app/ .
 EXPOSE 5000
 
 # Running the application when container starts
-CMD ["gunicorn", "--bind", "0.0.0.0:5000","app:app"]
+CMD ["gunicorn","--bind", "0.0.0.0:5000","--workers", "2", "--timeout", "120", "--access-logfile","-","--error-logfile","-","app:app"]
 
 
