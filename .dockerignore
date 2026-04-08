@@ -1,0 +1,20 @@
+#Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# Git
+.git/
+.gitignore
+
+# Docs and Scripts not needed for the container
+README.md
+deploy.sh
+notes.txt
+
+# AWS credentials
+.aws/
+*.pem
+
