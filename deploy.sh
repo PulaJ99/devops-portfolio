@@ -1,36 +1,32 @@
-#!/bin/bash
-
 # Extracting the public IP address of the ec2 instance
 
 EC2_PUBLIC_IP=$(aws ec2 describe-instances \
-	--filters "Name=tag:Name,Values=devops-portfolio" "Name=instance-state-name,Values=running" \
-	--query "Reservations[].Instances[].PublicIpAddress" \
-	--output text)
+        --filters "Name=tag:Name,Values=devops-portfolio" "Name=instance-state-name,Values=running" \
+        --query "Reservations[].Instances[].PublicIpAddress" \
+        --output text)
 
 echo $EC2_PUBLIC_IP
 
 # Deployment script — copies app to EC2 and restarts it
 
 KEY_PATH="~/.ssh/devops-portfolio-key.pem"
-LOCAL_APP_DIR="~/devops-portfolio/app"
-REMOTE_APP_DIR="/home/ubuntu/app"
+IMAGE_NAME="pulunuwanj/devops-portfolio-project_1:latest"
 
-# Copy app files to the server
+# Build the image & Push Docker hub
 
-scp -i $KEY_PATH -r $LOCAL_APP_DIR ubuntu@$EC2_PUBLIC_IP:$REMOTE_APP_DIR/
+docker build -t $IMAGE_NAME .
+docker push $IMAGE_NAME
 
-# SSH in to the remote server, kill current app and restart the app
+# Deploying app to the server in a docker container
+
+echo "Deploying app to EC2 ..."
 
 ssh -i $KEY_PATH ubuntu@$EC2_PUBLIC_IP -yes << 'EOF' 
-pkill -f "python3 app.py" || true
-cd /home/ubuntu/app
-source env/bin/activate
-nohup python3 app.py > app.log 2>&1 &
-echo "App restarted successfully" 
+docker pull $IMAGE_NAME
+docker compose down
+docker compose up -d
+echo "Deployment complete"
 
 EOF
 
 echo "Deployment completed - http://$EC2_PUBLIC_IP:5000"
-
-
-
