@@ -1,7 +1,7 @@
 services:
   
   flask-app:
-    image: pulunuwanj/devops-portfolio-project_1:v1
+    image: pulunuwanj/devops-portfolio-project_1:v2
     container_name: flask-app
     ports: 
       - "5000:5000"

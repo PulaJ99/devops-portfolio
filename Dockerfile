@@ -17,6 +17,9 @@ COPY app/ .
 EXPOSE 5000
 
 # Running the application when container starts
-CMD ["gunicorn","--bind", "0.0.0.0:5000","--workers", "2", "--timeout", "120", "--access-logfile","-","--error-logfile","-","app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "3", \
+     "--threads", "2", "--timeout", "120", "--keep-alive", "5", \
+     "--access-logfile", "-", "--error-logfile", "-", \
+     "--log-level", "info", "app:app"]
 
 
