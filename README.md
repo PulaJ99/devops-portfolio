@@ -1,6 +1,43 @@
 ###  DevOps Portfolio Project ###
 
-############################    Stage 1 - Flask App Deployed on AWS EC2  ############################
+############################    Stage 2 - Containerised with Docker  ############################
+
+The Flask app is now packaged as a Docker container and deployed
+on EC2 via Docker Compose.
+
+## Docker setup
+- Dockerfile using python:3.11-slim base image
+- .dockerignore to keep image lean and credentials safe
+- docker-compose.yml with custom bridge network (portfolio-network)
+- Image published to DockerHub: hub.docker.com/r/YOURUSERNAME/devops-portfolio
+
+## Gunicorn configuration
+Configured with 3 workers and 2 threads per worker for the t3.micro instance (2 vCPU, 1GB RAM). This gives 6 concurrent request handlers while staying within the memorylimit. Timeout set to 120s to handle slow cold starts. Logs sent to stdot so they are visible via docker logs.
+
+## How to run locally
+docker compose up -d
+# Visit http://localhost:5000
+# Check health: http://localhost:5000/health
+
+### How to deploy to EC2
+./deploy.sh
+# Builds image, pushes to DockerHub, pulls on EC2, restarts container
+
+### What I learned
+- Writing production Dockerfiles with layer caching optimisation
+- Tuning Gunicorn workers and timeout for instance hardware specs
+- Diagnosing and fixing worker timeout issues from container logs
+- Container networking with named bridge networks
+- Docker Compose for service orchestration
+- Pushing and pulling images from DockerHub
+- Deploying containerised apps to EC2
+
+## Coming next — Stage 3
+Provisioning all infrastructure with Terraform (IaC)
+
+
+
+############################    Stage 1 - Flask App Deployed on AWS EC2  #####################s#######
 
 A Python Flask web application deployed on AWS EC2 using Linux, SSH, and AWS CLI. 
 Part of a 5-stage DevOps portfolio project demonstrating infrastructure and deployment skills.
@@ -27,7 +64,6 @@ http://Server_Public_IP:5000
 - aws ec2 run-instances                                           : to launch the ec2 instance
 - ssh -i key_file ubuntu@public_ip                                : ssh to ec2 instance
 - scp -i key_file -r <file> ubuntu@public_ip:<location_to_paste>  : copy files to the server
-- nohup python3 app.py > app.log 2>&1 &                           : to run in background
 
 ## What learned
 - AWS EC2, key pair and security group provisioning via CLI
@@ -38,6 +74,5 @@ http://Server_Public_IP:5000
 - Bash deployment scripting
 
 
-############################    Stage 2 - Containerising this app with Docker  ############################
 
 To be continued
